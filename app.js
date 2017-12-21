@@ -1,4 +1,4 @@
-let cookieVal = 130000,
+let cookieVal = 0,
   cursorCounter = 0,
   grandmaCounter = 0,
   farmCounter = 0,
@@ -13,6 +13,7 @@ let cookieVal = 130000,
   production = (prodVal, counter) => prodVal * counter, //oblicznie produkcji jednego producenta w 1 sec
   cookieProdSec = 0;
   currCookieVal = 0;
+
 const cookieValDiv = document.querySelector('.cookie-quantity'),
   cookieValDivSec = document.querySelector('.cookie-quantity-sec'),
   cookie = document.querySelector('.cookie-img'),
@@ -49,8 +50,10 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       cursorPrice = priceNew(cursorPrice, cursorCounter);
       cursorPriceInfo.innerText = cursorPrice;
       cursorQuanity.innerText = cursorCounter;
-      const cursorExtra = document.createElement("div");
+      const cursorExtra = document.createElement('div');
+      cursorExtra.className = 'cursor-image';
       cursorVis.appendChild(cursorExtra);
+
     }
   });
 
@@ -62,7 +65,8 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       grandmaPrice = priceNew(grandmaPrice, grandmaCounter);
       grandmaPriceInfo.innerText = grandmaPrice;
       grandmaQuanity.innerText = grandmaCounter;
-      const grandmaExtra = document.createElement("div");
+      const grandmaExtra = document.createElement('div');
+      grandmaExtra.className = 'grandma-image';
       grandmaVis.appendChild(grandmaExtra);
     }
   });
@@ -75,7 +79,8 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       farmPrice = priceNew(farmPrice, farmCounter);
       farmPriceInfo.innerText = farmPrice;
       farmQuanity.innerText = farmCounter;
-      const farmExtra = document.createElement("div");
+      const farmExtra = document.createElement('div');
+      farmExtra.className = 'farm-image';
       farmVis.appendChild(farmExtra);
     }
   });
@@ -88,7 +93,8 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       minePrice = priceNew(minePrice, mineCounter);
       minePriceInfo.innerText = minePrice;
       mineQuanity.innerText = mineCounter;
-      const mineExtra = document.createElement("div");
+      const mineExtra = document.createElement('div');
+      mineExtra.className = 'mine-image';
       mineVis.appendChild(mineExtra);
     }
   });
@@ -100,7 +106,8 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       factoryPrice = priceNew(factoryPrice, factoryCounter);
       factoryPriceInfo.innerText = factoryPrice;
       factoryQuanity.innerText = factoryCounter;
-      const factoryExtra = document.createElement("div");
+      const factoryExtra = document.createElement('div');
+      factoryExtra.className = 'factory-image';
       factoryVis.appendChild(factoryExtra);
     }
   });
@@ -141,4 +148,4 @@ setInterval(function() {
   }else{
     factoryPriceInfo.style.color = '#ff0000';
   }
-}, 1000);//krótszy czas?
+}, 1000);
