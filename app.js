@@ -1,6 +1,6 @@
 'use strict';
 document.addEventListener("DOMContentLoaded", function() {
-let cookieVal = 0,
+let cookieVal = 100000000,
   currCookieVal = cookieVal,
   cookieProdSec = 0,
   cursorCounter = 0,
@@ -13,8 +13,9 @@ let cookieVal = 0,
   farmPrice = 1100,
   minePrice = 12000,
   factoryPrice = 130000,
+  round = (n) => Math.round(n*10)/10,
   priceNew = (price, counter) => Math.floor(price + counter * 0.1 * price), //funkcja do obliczania nowej ceny
-  production = (prodVal, counter) => prodVal * counter; //oblicznie produkcji jednego producenta w 1 sec
+  production = (prodVal, counter) => round(prodVal * counter); //oblicznie produkcji jednego producenta w 1 sec
 
 
 
@@ -128,7 +129,7 @@ setInterval(function() {
   mineProdVal = production(47, mineCounter),
   factoryProdVal = production(260, factoryCounter);
 
-  cookieProdSec = cursorProdVal + grandmaProdVal + farmProdVal + mineProdVal + factoryProdVal;//(zaokrąglić)oblicznie produkcji na sec
+  cookieProdSec = cursorProdVal + grandmaProdVal + farmProdVal + mineProdVal + factoryProdVal;
   currCookieVal = Math.floor(cookieVal += cookieProdSec); //obecny stan ciasteczek
   cookieValDiv.innerText = currCookieVal + ' cookies';
   cookieValDivSec.innerText = 'per second: ' + cookieProdSec;
@@ -159,4 +160,5 @@ setInterval(function() {
     factoryPriceInfo.style.color = '#ff0000';
   }
 }, 1000);
+
 });
