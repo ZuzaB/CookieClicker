@@ -1,5 +1,5 @@
 # CookieClicker
-If you want play jut click: [here](https://zuzab.github.io/CookieClicker/))
+If you want play jut click: [here](https://zuzab.github.io/CookieClicker/)
 
 ## Used technologies: 
 
