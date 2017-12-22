@@ -2,7 +2,7 @@
 
 body {
   color: #000;
-  background: #222;
+    background: #9f763f;
   font-family: 'Risque', cursive;
   letter-spacing: 2px;
 }
@@ -226,4 +226,5 @@ animation: Click 10s linear 8s infinite;
   color: #fff;
   padding: 25px 10px;
   text-align: right;
+  border-top: 1px solid #542102;
 }
