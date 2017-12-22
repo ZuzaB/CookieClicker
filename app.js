@@ -1,4 +1,8 @@
+'use strict';
+document.addEventListener("DOMContentLoaded", function() {
 let cookieVal = 0,
+  currCookieVal = cookieVal,
+  cookieProdSec = 0,
   cursorCounter = 0,
   grandmaCounter = 0,
   farmCounter = 0,
@@ -10,9 +14,9 @@ let cookieVal = 0,
   minePrice = 12000,
   factoryPrice = 130000,
   priceNew = (price, counter) => Math.floor(price + counter * 0.1 * price), //funkcja do obliczania nowej ceny
-  production = (prodVal, counter) => prodVal * counter, //oblicznie produkcji jednego producenta w 1 sec
-  cookieProdSec = 0;
-  currCookieVal = 0;
+  production = (prodVal, counter) => prodVal * counter; //oblicznie produkcji jednego producenta w 1 sec
+
+
 
 const cookieValDiv = document.querySelector('.cookie-quantity'),
   cookieValDivSec = document.querySelector('.cookie-quantity-sec'),
@@ -28,11 +32,11 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
   farmPanel = document.querySelector('.producers-farm'),
   farmPriceInfo = farmPanel.querySelector('.producers-price'),
   farmQuanity = farmPanel.querySelector('.producers-quantity'),
-  farmVis = document.querySelector('.farm')
+  farmVis = document.querySelector('.farm'),
   minePanel = document.querySelector('.producers-mine'),
   minePriceInfo = minePanel.querySelector('.producers-price'),
   mineQuanity = minePanel.querySelector('.producers-quantity'),
-  mineVis = document.querySelector('.mine')
+  mineVis = document.querySelector('.mine'),
   factoryPanel = document.querySelector('.producers-factory'),
   factoryPriceInfo = factoryPanel.querySelector('.producers-price'),
   factoryQuanity = factoryPanel.querySelector('.producers-quantity'),
@@ -50,8 +54,9 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       cursorPrice = priceNew(cursorPrice, cursorCounter);
       cursorPriceInfo.innerText = cursorPrice;
       cursorQuanity.innerText = cursorCounter;
-      const cursorExtra = document.createElement('div');
+      const cursorExtra = document.createElement('img');
       cursorExtra.className = 'cursor-image';
+      cursorExtra.src = 'img/cursor.png';
       cursorVis.appendChild(cursorExtra);
 
     }
@@ -65,8 +70,9 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       grandmaPrice = priceNew(grandmaPrice, grandmaCounter);
       grandmaPriceInfo.innerText = grandmaPrice;
       grandmaQuanity.innerText = grandmaCounter;
-      const grandmaExtra = document.createElement('div');
-      grandmaExtra.className = 'grandma-image';
+      const grandmaExtra = document.createElement('img');
+      grandmaExtra.className = 'producers-img';
+      grandmaExtra.src = 'img/grandmother.png';
       grandmaVis.appendChild(grandmaExtra);
     }
   });
@@ -79,8 +85,9 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       farmPrice = priceNew(farmPrice, farmCounter);
       farmPriceInfo.innerText = farmPrice;
       farmQuanity.innerText = farmCounter;
-      const farmExtra = document.createElement('div');
-      farmExtra.className = 'farm-image';
+      const farmExtra = document.createElement('img');
+      farmExtra.className = 'producers-img';
+      farmExtra.src = 'img/farm.png';
       farmVis.appendChild(farmExtra);
     }
   });
@@ -93,8 +100,9 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       minePrice = priceNew(minePrice, mineCounter);
       minePriceInfo.innerText = minePrice;
       mineQuanity.innerText = mineCounter;
-      const mineExtra = document.createElement('div');
-      mineExtra.className = 'mine-image';
+      const mineExtra = document.createElement('img');
+      mineExtra.className = 'producers-img';
+      mineExtra.src = 'img/mine.png';
       mineVis.appendChild(mineExtra);
     }
   });
@@ -106,8 +114,9 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       factoryPrice = priceNew(factoryPrice, factoryCounter);
       factoryPriceInfo.innerText = factoryPrice;
       factoryQuanity.innerText = factoryCounter;
-      const factoryExtra = document.createElement('div');
-      factoryExtra.className = 'factory-image';
+      const factoryExtra = document.createElement('img');
+      factoryExtra.className = 'producers-img';
+      factoryExtra.src = 'img/factory.png';
       factoryVis.appendChild(factoryExtra);
     }
   });
@@ -118,6 +127,7 @@ setInterval(function() {
   farmProdVal = production(8, farmCounter),
   mineProdVal = production(47, mineCounter),
   factoryProdVal = production(260, factoryCounter);
+
   cookieProdSec = cursorProdVal + grandmaProdVal + farmProdVal + mineProdVal + factoryProdVal;//(zaokrąglić)oblicznie produkcji na sec
   currCookieVal = Math.floor(cookieVal += cookieProdSec); //obecny stan ciasteczek
   cookieValDiv.innerText = currCookieVal + ' cookies';
@@ -149,3 +159,4 @@ setInterval(function() {
     factoryPriceInfo.style.color = '#ff0000';
   }
 }, 1000);
+});
