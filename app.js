@@ -1,6 +1,14 @@
-'use strict';
 document.addEventListener("DOMContentLoaded", function() {
-let cookieVal = 100000000,
+window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
+
+if (!window.indexedDB) {
+   window.alert("Your browser doesn't support a stable version of IndexedDB.")
+}
+
+let cookieVal = 0,
   currCookieVal = cookieVal,
   cookieProdSec = 0,
   cursorCounter = 0,
@@ -17,7 +25,55 @@ let cookieVal = 100000000,
   priceNew = (price, counter) => Math.floor(price + counter * 0.1 * price), //funkcja do obliczania nowej ceny
   production = (prodVal, counter) => round(prodVal * counter); //oblicznie produkcji jednego producenta w 1 sec
 
+const variablesData = [
+  { id: 'cookieVal', val: cookieVal},
+  { id: 'cursorCounter', val: cursorCounter},
+  { id: 'grandmaCounter', val: grandmaCounter},
+  { id: 'farmCounter', val: farmCounter},
+  { id: 'mineCounter', val: mineCounter},
+  { id: 'factoryCounter', val: factoryCounter},
+  { id: 'cursorPrice', val: cursorPrice},
+  { id: 'grandmaPrice', val: grandmaPrice},
+  { id: 'farmPrice', val: farmPrice},
+  { id: 'minePrice', val: minePrice},
+  { id: 'factoryPrice', val: factoryPrice}
+];
 
+var db;
+var request = window.indexedDB.open('appStateDb', 1);
+
+request.onupgradeneeded = function(event) {
+
+    db = request.result;
+
+    var objectStore = db.createObjectStore("variables", {keyPath: "id"});
+
+
+    objectStore.transaction.oncomplete = function() {
+      console.log('ff');
+      var variablesObjectStore = db.transaction("variables", "readwrite").objectStore("variables");
+      variablesData.forEach(function(variable) {
+        variablesObjectStore.add(variable);
+        console.log('ff');
+      });
+    };
+}
+
+request.onerror = function() {
+    console.log("error: ");
+};
+
+request.onsuccess = function() {
+    db = request.result;
+    var trans = db.transaction("variables", "readwrite");
+    var store = trans.objectStore("variables");
+    console.log("success: "+ db);
+
+    var variable = store.get('cursorPrice');
+    variable.onsuccess = function() {
+       console.log(variable.result.val);
+   };
+};
 
 const cookieValDiv = document.querySelector('.cookie-quantity'),
   cookieValDivSec = document.querySelector('.cookie-quantity-sec'),
