@@ -8,7 +8,7 @@ if (!window.indexedDB) {
    window.alert("Your browser doesn't support a stable version of IndexedDB.")
 }
 
-let cookieVal = 200000,
+let cookieVal = 0,
     currCookieVal = cookieVal,
     cookieProdSec = 0,
     cursorCounter = 0,
