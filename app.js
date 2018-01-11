@@ -22,6 +22,7 @@ let cookieVal = 0,
     minePrice = 12000,
     factoryPrice = 130000,
     cursorExtra, grandmaExtra, farmExtra, mineExtra, factoryExtra,
+    cursorProdVal, grandmaProdVal, farmProdVal, mineProdVal, factoryProdVal,
     round = (n) => Math.round(n*10)/10,
     priceNew = (pr, co) => Math.floor(pr + co * 0.1 * pr), //funkcja do obliczania nowej ceny
     production = (prodVal, counter) => round(prodVal * counter); //oblicznie produkcji jednego producenta w 1 sec
@@ -172,8 +173,8 @@ function changeColor (price, elem){
   }
 }
 
-setInterval(function() {//poprawic
-  let cursorProdVal = production(0.1, cursorCounter),
+let countCookie = setInterval( function() {
+  cursorProdVal = production(0.1, cursorCounter),
   grandmaProdVal = production(1, grandmaCounter),
   farmProdVal = production(8, farmCounter),
   mineProdVal = production(47, mineCounter),
@@ -181,6 +182,10 @@ setInterval(function() {//poprawic
 
   cookieProdSec = cursorProdVal + grandmaProdVal + farmProdVal + mineProdVal + factoryProdVal;
   currCookieVal = Math.floor(cookieVal += cookieProdSec); //obecny stan ciasteczek
+}, 1000);
+
+setInterval(function(){
+  countCookie;
   cookieValDiv.innerText = currCookieVal + ' cookies';
   cookieValDivSec.innerText = 'per second: ' + cookieProdSec;
 
@@ -189,6 +194,6 @@ setInterval(function() {//poprawic
   changeColor (farmPrice, farmPriceInfo);
   changeColor (minePrice, minePriceInfo);
   changeColor (factoryPrice, factoryPriceInfo);
-}, 1000);
+}, 1);
 
 });
