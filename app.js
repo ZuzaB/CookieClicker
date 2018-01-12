@@ -185,6 +185,7 @@ let countCookie = setInterval( function() {
 }, 1000);
 
 setInterval(function(){
+  currCookieVal = Math.floor(cookieVal);
   countCookie;
   cookieValDiv.innerText = currCookieVal + ' cookies';
   cookieValDivSec.innerText = 'per second: ' + cookieProdSec;
