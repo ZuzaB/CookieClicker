@@ -24,41 +24,37 @@ let cookieVal = 0,
     cursorExtra, grandmaExtra, farmExtra, mineExtra, factoryExtra,
     cursorProdVal, grandmaProdVal, farmProdVal, mineProdVal, factoryProdVal,
     round = (n) => Math.round(n*10)/10,
-    priceNew = (pr, co) => Math.floor(pr + co * 0.1 * pr), //funkcja do obliczania nowej ceny
-    production = (prodVal, counter) => round(prodVal * counter); //oblicznie produkcji jednego producenta w 1 sec
+    priceNew = (pr, co) => Math.floor(pr + co * 0.1 * pr),
+    production = (prodVal, counter) => round(prodVal * counter);
 
-const variablesData = [
-  { id: 'cookieVal', val: cookieVal},
-  { id: 'cursorCounter', val: cursorCounter},
-  { id: 'grandmaCounter', val: grandmaCounter},
-  { id: 'farmCounter', val: farmCounter},
-  { id: 'mineCounter', val: mineCounter},
-  { id: 'factoryCounter', val: factoryCounter},
-  { id: 'cursorPrice', val: cursorPrice},
-  { id: 'grandmaPrice', val: grandmaPrice},
-  { id: 'farmPrice', val: farmPrice},
-  { id: 'minePrice', val: minePrice},
-  { id: 'factoryPrice', val: factoryPrice}
-];
+//storing and getting data from indexesDB
+    const variablesNames =
+      [ 'cookieVal',
+        'cursorCounter',
+        'grandmaCounter',
+        'farmCounter',
+        'mineCounter',
+        'factoryCounter',
+        'cursorPrice',
+        'grandmaPrice',
+        'farmPrice',
+        'minePrice',
+        'factoryPrice' ];
 
 var db;
-var request = window.indexedDB.open('appStateDb', 1);
+var request = window.indexedDB.open('appStateDb', 3);
 
 request.onupgradeneeded = function(event) {
 
     db = request.result;
 
-    var objectStore = db.createObjectStore("variables", {keyPath: "id"});
+    if (db.objectStoreNames.contains('variables'))
+    {
+      db.deleteObjectStore('variables');
+    }
+  var objectStore = db.createObjectStore("variables", {keyPath: "id"});
 
-
-    objectStore.transaction.oncomplete = function() {
-      console.log('ff');
-      var variablesObjectStore = db.transaction("variables", "readwrite").objectStore("variables");
-      variablesData.forEach(function(variable) {
-        variablesObjectStore.add(variable);
-        console.log('ff');
-      });
-    };
+  }
 }
 
 request.onerror = function() {
@@ -71,11 +67,40 @@ request.onsuccess = function() {
     var store = trans.objectStore("variables");
     console.log("success: "+ db);
 
-    var variable = store.get('cursorPrice');
-    variable.onsuccess = function() {
-       console.log(variable.result.val);
-   };
 };
+
+function getdataVal(keyid) {
+//  pobranie wartości zmiennej wg jej nazwy w Stringu
+var retVal = 0
+
+switch ( keyid ){
+ case "cookieVal":
+ case "cursorCounter":
+ case "grandmaCounter":
+ case "farmCounter":
+ case "mineCounter":
+ case "factoryCounter":
+ case "cursorPrice":
+ case "grandmaPrice":
+ case "farmPrice":
+ case "minePrice":
+ case "factoryPrice":
+   try {
+    retVal = eval(keyid); // rozwinięcie nazwy zmiennej
+   }
+   catch(err) {
+      return 0;
+   }
+   finally {
+     //  return retVal
+   }
+ return retVal
+   break;
+ default :
+   return retVal;
+ }
+}
+
 
 const cookieValDiv = document.querySelector('.cookie-quantity'),
       cookieValDivSec = document.querySelector('.cookie-quantity-sec'),
