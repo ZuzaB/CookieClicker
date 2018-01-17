@@ -1,11 +1,11 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
 window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
 window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
 
 if (!window.indexedDB) {
-   window.alert("Your browser doesn't support a stable version of IndexedDB.")
+   window.alert("Your browser doesn't support a stable version of IndexedDB.");
 }
 
 let cookieVal = 0,
@@ -27,7 +27,7 @@ let cookieVal = 0,
     priceNew = (pr, co) => Math.floor(pr + co * 0.1 * pr),
     production = (prodVal, counter) => round(prodVal * counter);
 
-//storing and getting data from indexesDB
+//--------storing and getting data from indexesDB-------
 const variablesData = [
   { id: 'cookieVal', val: cookieVal},
   { id: 'cursorCounter', val: cursorCounter},
@@ -46,145 +46,146 @@ var db;
 var request = window.indexedDB.open('appStateDb', 3);
 
 request.onupgradeneeded = function(event) {
-
     db = request.result;
-
-    if (db.objectStoreNames.contains('variables'))
-    {
+    if (db.objectStoreNames.contains('variables')){
       db.deleteObjectStore('variables');
     }
-  var objectStore = db.createObjectStore("variables", {keyPath: "id"});
-
-  }
+  var objectStore = db.createObjectStore('variables', {keyPath: 'id'});
+};
 
 request.onerror = function() {
-    console.log("error: ");
+    console.log('error: ');
 };
 
 request.onsuccess = function() {
     db = request.result;
-    var trans = db.transaction("variables", "readwrite");
-    var store = trans.objectStore("variables");
-    console.log("success: "+ db);
+    var trans = db.transaction('variables', 'readwrite');
+    var store = trans.objectStore('variables');
+    console.log('success: '+ db);
     readVariables();
 };
 
 function getdataVal(keyid) {
-  //  pobranie wartości zmiennej wg jej nazwy w Stringu
   var retVal = 0
-
   if (variablesData.some(function(currid) { return currid.id === keyid;}))
    {
     try {
-      retVal = eval(keyid); // rozwinięcie nazwy zmiennej
+      retVal = eval(keyid);
     } catch (err) {
       return 0;
     }
   }
-  console.log("some", keyid, retVal)
+  console.log('some', keyid, retVal)
   return retVal;
 }
+
 function setdataVal(keyid, newval) {
- // przypisanie zmiennej nowej wartości wg ID
  switch ( keyid ){
-  case "cookieVal":
+  case 'cookieVal':
    cookieVal = newval;
    break;
-  case "cursorCounter":
+  case 'cursorCounter':
    cursorCounter = newval;
+   updateProducer (cursorCounter, cursorQuanity, cursorExtra, 'cursor-image', 'img/cursor.png', cursorVis);
    break;
-  case "grandmaCounter":
+  case 'grandmaCounter':
    grandmaCounter = newval;
+   updateProducer (grandmaCounter, grandmaQuanity, grandmaExtra, 'producers-img', 'img/grandmother.png', grandmaVis);
    break;
-  case "farmCounter":
+  case 'farmCounter':
    farmCounter = newval;
+   updateProducer(farmCounter, farmQuanity, farmExtra, 'producers-img', 'img/farm.png', farmVis);
    break;
-  case "mineCounter":
+  case 'mineCounter':
    mineCounter = newval;
+   updateProducer(mineCounter, mineQuanity, mineExtra, 'producers-img', 'img/mine.png', mineVis);
    break;
-  case "factoryCounter":
+  case 'factoryCounter':
    factoryCounter = newval;
+   updateProducer(factoryCounter, factoryQuanity, factoryExtra, 'producers-img', 'img/factory.png', factoryVis);
    break;
-  case "cursorPrice":
+  case 'cursorPrice':
    cursorPrice = newval;
+   updateProducerPrice (cursorPrice, cursorPriceInfo);
    break;
-  case "grandmaPrice":
+  case 'grandmaPrice':
    grandmaPrice = newval;
+   updateProducerPrice (grandmaPrice, grandmaPriceInfo);
    break;
-  case "farmPrice":
+  case 'farmPrice':
    farmPrice = newval;
+   updateProducerPrice(farmPrice, farmPriceInfo);
    break;
-  case "minePrice":
+  case 'minePrice':
    minePrice = newval;
+   updateProducerPrice( minePrice, minePriceInfo);
    break;
-  case "factoryPrice":
+  case 'factoryPrice':
    factoryPrice = newval;
+   updateProducerPrice(factoryPrice, factoryPriceInfo);
    break;
   default :
     return false;
   }
   return true;
+
+  function updateProducer (counter, quanity, elem, classCss, imgSrc, vis){
+    quanity.innerText = counter;
+    for(var i=0; i<counter; i++){
+      elem = document.createElement('img');
+      elem.className = classCss;
+      elem.src = imgSrc;
+      vis.appendChild(elem);
+    }
+  }
+
+  function updateProducerPrice (price, info) {
+    info.innerText = price;
+  }
 }
 
-function readVariables(){
-// odczyt zmiennych z bazy
-
- var trans = db.transaction("variables", "readwrite");
- var store = trans.objectStore("variables");
-
- variablesData.forEach(function(datavar) {
-
-  var request = store.get(datavar.id); // odczyt rekordu
-
-  request.onsuccess = function(event) {
-  // Get the old value that we want to update
-   var data = event.target.result;
-   console.log("success get",data.id,data.val);
-   setdataVal(data.id, data.val); // zapisać do zmiennej
-   };
- });
+function readVariables() {
+    db.transaction(['variables'], 'readonly').objectStore('variables').openCursor().onsuccess = function(e) {
+        var cursor = e.target.result;
+		if(cursor) {
+			setdataVal(cursor.value.id, cursor.value.val);
+			cursor.continue();
+		}
+  }
 }
 
 function saveVariables(){
-// zapis zmiennych do bazy
-console.log('save', db);
 if (!db) {
   return;
 }
- var trans = db.transaction("variables", "readwrite");
- var store = trans.objectStore("variables");
+ var trans = db.transaction('variables', 'readwrite');
+ var store = trans.objectStore('variables');
 
 variablesData.forEach(function(datavar) {
  var request = store.get(datavar.id);
 
  request.onerror = function(event) {
-  // nie występuje w bazie, dodać
    var requestUpdate = store.add({id : datavar.id, val : getdataVal(datavar.id)})
    requestUpdate.onerror = function(event) {
-     // Do something with the error
-	 console.log("error add",datavar.id)
+	 console.log('error add', datavar.id);
    };
    requestUpdate.onsuccess = function(event) {
-     // Success - the data is updated!
    };
-
  };
 
  request.onsuccess = function(event) {
-  // Get the old value that we want to update
   var data = event.target.result;
-  console.log("success get",datavar)
-  // update the value(s) in the object that you want to change
-  // Put this updated object back into the database.
+  console.log('success get', datavar);
   var requestUpdate = store.put({id : datavar.id , val : getdataVal(datavar.id)});
 
    requestUpdate.onsuccess = function(event) {
-     // Success - the data is updated!
-	 console.log("put success",{id : datavar.id , val : getdataVal(datavar.id)});//usuną
+
+	 console.log('put success',{id : datavar.id , val : getdataVal(datavar.id)});//usuną
    };
   };
  });
 }
+//---------end indexedDB code-----------
 
 const cookieValDiv = document.querySelector('.cookie-quantity'),
       cookieValDivSec = document.querySelector('.cookie-quantity-sec'),
@@ -269,8 +270,7 @@ const cookieValDiv = document.querySelector('.cookie-quantity'),
       cookieVal -= factoryPrice;
       currCookieVal -= factoryPrice;
       factoryPrice = priceNew(factoryPrice, factoryCounter);
-      calcPriceAndQuanity();
-      addProducer(factoryCounter, factoryPrice, factoryPriceInfo, factoryQuanity, factoryExtra, 'producers-img', 'img/factory.png', factoryVis);
+      addProducer (factoryCounter, factoryPrice, factoryPriceInfo, factoryQuanity, factoryExtra, 'producers-img', 'img/factory.png', factoryVis);
     }
   });
 
@@ -307,9 +307,9 @@ setInterval(function(){
 
 }, 1);
 
-window.addEventListener("beforeunload", function (event) {
-   saveVariables();
-    var dialogText = 'end';
+window.addEventListener('beforeunload', function (event) {
+  saveVariables();
+  var dialogText = 'end';
   event.returnValue = dialogText;
   return dialogText;
  });
