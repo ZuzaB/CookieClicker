@@ -28,18 +28,19 @@ let cookieVal = 0,
     production = (prodVal, counter) => round(prodVal * counter);
 
 //storing and getting data from indexesDB
-    const variablesNames =
-      [ 'cookieVal',
-        'cursorCounter',
-        'grandmaCounter',
-        'farmCounter',
-        'mineCounter',
-        'factoryCounter',
-        'cursorPrice',
-        'grandmaPrice',
-        'farmPrice',
-        'minePrice',
-        'factoryPrice' ];
+const variablesData = [
+  { id: 'cookieVal', val: cookieVal},
+  { id: 'cursorCounter', val: cursorCounter},
+  { id: 'grandmaCounter', val: grandmaCounter},
+  { id: 'farmCounter', val: farmCounter},
+  { id: 'mineCounter', val: mineCounter},
+  { id: 'factoryCounter', val: factoryCounter},
+  { id: 'cursorPrice', val: cursorPrice},
+  { id: 'grandmaPrice', val: grandmaPrice},
+  { id: 'farmPrice', val: farmPrice},
+  { id: 'minePrice', val: minePrice},
+  { id: 'factoryPrice', val: factoryPrice}
+];
 
 var db;
 var request = window.indexedDB.open('appStateDb', 3);
@@ -55,7 +56,6 @@ request.onupgradeneeded = function(event) {
   var objectStore = db.createObjectStore("variables", {keyPath: "id"});
 
   }
-}
 
 request.onerror = function() {
     console.log("error: ");
@@ -66,41 +66,125 @@ request.onsuccess = function() {
     var trans = db.transaction("variables", "readwrite");
     var store = trans.objectStore("variables");
     console.log("success: "+ db);
-
+    readVariables();
 };
 
 function getdataVal(keyid) {
-//  pobranie wartości zmiennej wg jej nazwy w Stringu
-var retVal = 0
+  //  pobranie wartości zmiennej wg jej nazwy w Stringu
+  var retVal = 0
 
-switch ( keyid ){
- case "cookieVal":
- case "cursorCounter":
- case "grandmaCounter":
- case "farmCounter":
- case "mineCounter":
- case "factoryCounter":
- case "cursorPrice":
- case "grandmaPrice":
- case "farmPrice":
- case "minePrice":
- case "factoryPrice":
-   try {
-    retVal = eval(keyid); // rozwinięcie nazwy zmiennej
-   }
-   catch(err) {
+  if (variablesData.some(function(currid) { return currid.id === keyid;}))
+   {
+    try {
+      retVal = eval(keyid); // rozwinięcie nazwy zmiennej
+    } catch (err) {
       return 0;
-   }
-   finally {
-     //  return retVal
-   }
- return retVal
+    }
+  }
+  console.log("some", keyid, retVal)
+  return retVal;
+}
+function setdataVal(keyid, newval) {
+ // przypisanie zmiennej nowej wartości wg ID
+ switch ( keyid ){
+  case "cookieVal":
+   cookieVal = newval;
    break;
- default :
-   return retVal;
- }
+  case "cursorCounter":
+   cursorCounter = newval;
+   break;
+  case "grandmaCounter":
+   grandmaCounter = newval;
+   break;
+  case "farmCounter":
+   farmCounter = newval;
+   break;
+  case "mineCounter":
+   mineCounter = newval;
+   break;
+  case "factoryCounter":
+   factoryCounter = newval;
+   break;
+  case "cursorPrice":
+   cursorPrice = newval;
+   break;
+  case "grandmaPrice":
+   grandmaPrice = newval;
+   break;
+  case "farmPrice":
+   farmPrice = newval;
+   break;
+  case "minePrice":
+   minePrice = newval;
+   break;
+  case "factoryPrice":
+   factoryPrice = newval;
+   break;
+  default :
+    return false;
+  }
+  return true;
 }
 
+function readVariables(){
+// odczyt zmiennych z bazy
+
+ var trans = db.transaction("variables", "readwrite");
+ var store = trans.objectStore("variables");
+
+ variablesData.forEach(function(datavar) {
+
+  var request = store.get(datavar.id); // odczyt rekordu
+
+  request.onsuccess = function(event) {
+  // Get the old value that we want to update
+   var data = event.target.result;
+   console.log("success get",data.id,data.val);
+   setdataVal(data.id, data.val); // zapisać do zmiennej
+   };
+ });
+}
+
+function saveVariables(){
+// zapis zmiennych do bazy
+console.log('save', db);
+if (!db) {
+  return;
+}
+ var trans = db.transaction("variables", "readwrite");
+ var store = trans.objectStore("variables");
+
+variablesData.forEach(function(datavar) {
+ var request = store.get(datavar.id);
+
+ request.onerror = function(event) {
+  // nie występuje w bazie, dodać
+   var requestUpdate = store.add({id : datavar.id, val : getdataVal(datavar.id)})
+   requestUpdate.onerror = function(event) {
+     // Do something with the error
+	 console.log("error add",datavar.id)
+   };
+   requestUpdate.onsuccess = function(event) {
+     // Success - the data is updated!
+   };
+
+ };
+
+ request.onsuccess = function(event) {
+  // Get the old value that we want to update
+  var data = event.target.result;
+  console.log("success get",datavar)
+  // update the value(s) in the object that you want to change
+  // Put this updated object back into the database.
+  var requestUpdate = store.put({id : datavar.id , val : getdataVal(datavar.id)});
+
+   requestUpdate.onsuccess = function(event) {
+     // Success - the data is updated!
+	 console.log("put success",{id : datavar.id , val : getdataVal(datavar.id)});//usuną
+   };
+  };
+ });
+}
 
 const cookieValDiv = document.querySelector('.cookie-quantity'),
       cookieValDivSec = document.querySelector('.cookie-quantity-sec'),
@@ -220,6 +304,13 @@ setInterval(function(){
   changeColor (farmPrice, farmPriceInfo);
   changeColor (minePrice, minePriceInfo);
   changeColor (factoryPrice, factoryPriceInfo);
+
 }, 1);
 
+window.addEventListener("beforeunload", function (event) {
+   saveVariables();
+    var dialogText = 'end';
+  event.returnValue = dialogText;
+  return dialogText;
+ });
 });
