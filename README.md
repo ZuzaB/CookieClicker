@@ -8,4 +8,4 @@ If you want play just click: [here](https://zuzab.github.io/CookieClicker/)
 * JavaScript
 * IndexedDB
 
-Inspiration for this game: [http://orteil.dashnet.org/cookieclicker/]
+Inspiration for this game: http://orteil.dashnet.org/cookieclicker/
