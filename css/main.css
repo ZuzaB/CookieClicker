@@ -1,8 +1,6 @@
-
-
 body {
   color: #000;
-    background: #9f763f;
+  background: #9f763f;
   font-family: 'Risque', cursive;
   letter-spacing: 2px;
 }
@@ -61,19 +59,19 @@ body {
   text-align: center;
   font-weight: bold;
   color: #542102;
-  font-size: 30px;
+  font-size: 3vw;
   padding: 10px 0;
-  margin: 40px 0;
+  margin: 3vw 0;
 }
 
 .cookie-quantity-sec {
-  font-size: 20px;
+  font-size: 0.7em;
 }
 
 .cookie {
   width: 60%;
   margin: 0 auto;
-  padding-top: 20px;
+  padding-top: 2.5vw;
 }
 
 .cookie-img {
@@ -85,7 +83,7 @@ body {
   padding-left: 5px;
 }
 .cursor-image {
-  width: 30px;
+  width: 2.5vw;
 animation: Click 10s linear 8s infinite;
 }
 
@@ -96,13 +94,14 @@ animation: Click 10s linear 8s infinite;
   2% {
     transform: translate(0,-10px);
   }
-
 }
+
 .producers-visual {
   margin-top: 20px;
   width: 100%;
-  height: 100px;
-  padding: 20px 0 0 5px;
+  height: 10vw;
+  padding-top: 20px;
+
 }
 
 .producers-visual img {
@@ -201,23 +200,25 @@ animation: Click 10s linear 8s infinite;
 }
 
 .producers-img {
-  width: 60px;
+  width: 4.2vw;
 }
 
 .producers-header {
   margin: 0 auto;
+  font-size: 2.5vw;
 }
 
 .producers-cookie-img {
-  width: 20px;
+  width: 1.5vw;
 }
 
 .producers-price {
   color: #ff0000;
+  font-size: 1.5vw;
 }
 
 .producers-quantity {
-  font-size: 40px;
+  font-size: 3vw;
   font-weight: bold;
   color: rgba(21, 21, 21, .3);
 }
@@ -228,3 +229,25 @@ animation: Click 10s linear 8s infinite;
   text-align: right;
   border-top: 1px solid #542102;
 }
+
+@media (min-width: 620px) {
+   .producers-visual {
+     height: 8.5vw;
+   }
+ }
+@media (min-width: 880px) {
+  .cookie-container {
+      font-size: 30px;
+  }
+   .producers-visual {
+     height: 8vw;
+   }
+   .producers-img {
+      width: 4.4vw;
+   }
+ }
+@media (min-width: 1160px) {
+  .producers-visual {
+    height: 7.5vw;
+  }
+ }
